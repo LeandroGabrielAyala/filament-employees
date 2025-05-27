@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CountryResource\Pages;
 use App\Filament\Resources\CountryResource\RelationManagers;
+use App\Filament\Resources\CountryResource\RelationManagers\EmployeesRelationManager;
+use App\Filament\Resources\CountryResource\RelationManagers\StatesRelationManager;
 use App\Models\Country;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
@@ -20,7 +22,9 @@ class CountryResource extends Resource
 {
     protected static ?string $model = Country::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
+    protected static ?string $navigationGroup = 'System Management';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -28,8 +32,12 @@ class CountryResource extends Resource
             ->schema([
                 Fieldset::make('New country')
                     ->schema([
-                        TextInput::make('country_code'),
+                        TextInput::make('country_code')
+                        ->required()
+                        ->maxLength(3),
                         TextInput::make('name')
+                        ->required()
+                        ->maxLength(255)
                     ])
             ]);
     }
@@ -59,7 +67,8 @@ class CountryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            EmployeesRelationManager::class,
+            StatesRelationManager::class
         ];
     }
 
