@@ -4,6 +4,9 @@ namespace App\Filament\Resources\StateResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,9 +21,12 @@ class CitiesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Select::make('state_id')
+                    ->relationship('state', 'name')
+                    ->required(),
+                TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
             ]);
     }
 
@@ -29,7 +35,8 @@ class CitiesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                TextColumn::make('name')->sortable()->searchable(),
+                TextColumn::make('state.name')->sortable()->searchable(),
             ])
             ->filters([
                 //

@@ -7,6 +7,9 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -18,9 +21,12 @@ class StatesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Select::make('country_id')
+                    ->relationship('country', 'name')
+                    ->required(),
+                TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
             ]);
     }
 
@@ -29,7 +35,8 @@ class StatesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                TextColumn::make('name')->sortable()->searchable(),
+                TextColumn::make('country.name')->sortable()->searchable(),
             ])
             ->filters([
                 //
